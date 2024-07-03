@@ -269,24 +269,6 @@ static int pdo_sqlite_stmt_get_col(
 			ZVAL_NULL(result);
 			return 1;
 
-		case SQLITE_INTEGER: {
-			int64_t i = sqlite3_column_int64(S->stmt, colno);
-#if SIZEOF_ZEND_LONG < 8
-			if (i > ZEND_LONG_MAX || i < ZEND_LONG_MIN) {
-				ZVAL_STRINGL(result,
-					(char *) sqlite3_column_text(S->stmt, colno),
-					sqlite3_column_bytes(S->stmt, colno));
-				return 1;
-			}
-#endif
-			ZVAL_LONG(result, i);
-			return 1;
-		}
-
-		case SQLITE_FLOAT:
-			ZVAL_DOUBLE(result, sqlite3_column_double(S->stmt, colno));
-			return 1;
-
 		case SQLITE_BLOB:
 			ZVAL_STRINGL_FAST(result,
 				sqlite3_column_blob(S->stmt, colno), sqlite3_column_bytes(S->stmt, colno));
